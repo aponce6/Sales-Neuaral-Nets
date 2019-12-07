@@ -14,16 +14,16 @@ This is an application of a neural network designed to identify characterists of
 
 **ASSIGNMENT:**    
   1. Find the 'best' sales target price for predicting sales -  
-  Choose price of $9500. Generally made better predictions at lower prices.
+  Choose price of $9500.
   
   2. Determing values of age, gender, income level or commute distance *i.e.* miles/wk that predict best sales  
-  Minimum income of 5001, maximum debt of 8999, and minimum miles driven at 26
+  Minimum income of 4501, maximum debt of 9499, and minimum miles driven at 26.
   
   3. Determing the appropriate neural net - how many hidden layers, what variables to leave out?  
   3 hidden layers. Leave out age and gender.
   
   4. Does it help to use 80/20 (or any other) split for training/test sets?  
-  Used 75/25 split. Doesn't seem to matter.
+  Used 70/30 split. Doesn't seem to significantly change results.
   
   5. Recommend an advetising approach based on your findings  
   Place more emphasis on income, debt, and expected miles driven.
@@ -80,7 +80,7 @@ set the training fraction
 
 ```{r}
 ##set up the training and test data:
-trainingFraction = 0.75
+trainingFraction = 0.70
 lengthData = length(cars$age) #  how many entries in the data set
 nTrain = round(trainingFraction*lengthData,0)
 nTest = lengthData-nTrain
@@ -255,7 +255,7 @@ library(dplyr)
 # set up x with conditons on age, income, debt and miles you think 
 # would be appropriate for advertising
 #use dply function 'filter' to pull appropriate data from test set
-x = filter(testDataSet, income>5000 & debt < 9000 & miles > 25)
+x = filter(testDataSet, income>4500 & debt < 9500 & miles > 25)
 # to use in the neural net, normalize the test set data
 # notice that we use mean and sd values computed from the
 # train set.  The deal is, we don't know the mean and sd from 

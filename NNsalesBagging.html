@@ -10,7 +10,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Dr. J" />
+<meta name="author" content="Anthony Ponce" />
 
 
 <title>neualNetSales</title>
@@ -369,8 +369,8 @@ summary {
 
 
 <h1 class="title toc-ignore">neualNetSales</h1>
-<h4 class="author">Dr. J</h4>
-<h4 class="date">7/21/2019</h4>
+<h4 class="author">Anthony Ponce</h4>
+<h4 class="date">12/6/2019</h4>
 
 </div>
 
@@ -401,10 +401,18 @@ summary {
 <p>This is an application of a neural network designed to identify characterists of car buyers. The purose is to direct advertising</p>
 <p><strong>ASSIGNMENT:</strong><br />
 1. Find the ‘best’ sales target price for predicting sales -<br />
-2. Determing values of age, gender, income level or commute distance <em>i.e.</em> miles/wk that predict best sales<br />
-3. Determing the appropriate neural net - how many hidden layers, what variables to leave out?<br />
-4. Does it help to use 80/20 (or any other) split for training/test sets?<br />
-5. Recommend an advetising approach based on your findings 6. Based on the model you turned in in the initial NN assignment, use bagging to estimate expected effect</p>
+Choose price of $9500.</p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Determing values of age, gender, income level or commute distance <em>i.e.</em> miles/wk that predict best sales<br />
+Minimum income of 4501, maximum debt of 9499, and minimum miles driven at 26.</p></li>
+<li><p>Determing the appropriate neural net - how many hidden layers, what variables to leave out?<br />
+3 hidden layers. Leave out age and gender.</p></li>
+<li><p>Does it help to use 80/20 (or any other) split for training/test sets?<br />
+Used 70/30 split. Doesn’t seem to significantly change results.</p></li>
+<li><p>Recommend an advetising approach based on your findings<br />
+Place more emphasis on income, debt, and expected miles driven.</p></li>
+<li><p>Based on the model you turned in in the initial NN assignment, use bagging to estimate expected effect</p></li>
+</ol>
 <div id="first-set-up-the-environment" class="section level2">
 <h2><span class="header-section-number">1.1</span> first set up the environment</h2>
 <!-- Assumes the .csv file 'cars.csv' is in the working directory !-->
@@ -695,7 +703,7 @@ set up x, the input vector based on values you think are appropriate for adverti
 # set up x with conditons on age, income, debt and miles you think 
 # would be appropriate for advertising
 #use dply function &#39;filter&#39; to pull appropriate data from test set
-x = filter(cars, age &lt; 30 &amp; income&gt;4000 &amp; debt &lt; 10000 &amp; miles &gt; 30)
+x = filter(testDataSet, income&gt;4500 &amp; debt &lt; 9500 &amp; miles &gt; 25)
 # to use in the neural net, normalize the test set data
 # notice that we use mean and sd values computed from the
 # train set.  The deal is, we don&#39;t know the mean and sd from 
@@ -706,29 +714,76 @@ x$debt = (x$debt - meanDebt)/sdDebt
 x$income = (x$income-meanIncome)/sdIncome
 # print the values of the normalized inputs
 print(x)</code></pre>
-<pre><code>##           age gender     miles       debt     income sales salesTgt
-## 1  -0.8417368      1 0.4557141 -0.5878153  0.1442480 10278        1
-## 2  -0.7641660      0 0.5333224 -0.2626557  0.1982677 12581        1
-## 3  -0.6865952      0 1.6198393 -0.6243544  1.5010075 17878        1
-## 4  -0.6865952      1 1.7750559 -0.2433666  1.1354047 18120        1
-## 5  -0.9968783      0 1.1541892 -0.2934632  1.5550272 17094        1
-## 6  -0.6865952      0 0.6109308 -0.5366164  0.4716491  6025        0
-## 7  -0.9193075      0 0.3781057 -0.6185126  0.3224234  6403        0
-## 8  -0.6865952      1 0.6109308 -0.5588265  0.1529031 12415        1
-## 9  -0.9193075      1 0.6885391 -0.5293417  0.6689253 16678        1
-## 10 -0.8417368      0 0.3004974 -0.4325103  0.4074820  6240        0
-## 11 -0.9968783      1 0.3781057 -0.7045972  0.4161371  8004        0
-## 12 -0.8417368      1 0.5333224 -0.4234168 -0.4541468  6892        0
-## 13 -0.8417368      0 0.5333224 -0.4702619  0.9055972 15104        1
-## 14 -0.7641660      1 0.4557141 -0.2739537 -0.2819404  9533        1</code></pre>
+<pre><code>##           age gender        miles       debt       income sales salesTgt
+## 1   0.3218247      1  1.076580828 -0.7296179  0.667731542 16793        1
+## 2  -0.1435999      0  0.378105714 -0.3220662 -0.184645298 12965        1
+## 3  -0.6090245      1  0.378105714 -0.5220669 -0.201657020 14434        1
+## 4   0.3993955      0  0.610930752 -0.3890271 -0.218967194 12969        1
+## 5  -0.8417368      1  0.533322406 -0.4234168 -0.454146798  6892        0
+## 6  -0.1435999      0  0.533322406 -0.4774264  1.382820796 15422        1
+## 7   1.5629570      1  0.222889022 -0.6763248 -0.026764573  6317        0
+## 8   0.8648201      1 -0.087544363 -0.5789423 -0.306114966  6191        0
+## 9   1.1751032      1 -0.087544363 -0.6192841  0.420016985  9386        0
+## 10 -0.6090245      0  0.145280676 -0.5992786  0.456726491  7518        0
+## 11 -0.0660291      0  0.067672329 -0.3494017 -0.182257687 12030        1
+## 12 -0.0660291      0  0.455714060 -0.4012068  0.111716818  6842        0
+## 13 -0.9193075      0  0.378105714 -0.6185126  0.322423418  6403        0
+## 14  1.6405278      1  0.300497368 -0.4831580  0.196476980 14096        1
+## 15 -0.2211706      0  0.533322406 -0.3361749  1.258366615 15541        1
+## 16  0.7096786      0 -0.009936017 -0.6829934  0.504180244 10826        1
+## 17 -0.1435999      1  0.766147444 -0.4450758  0.623262303 25973        1
+## 18  1.2526740      0  0.533322406 -0.4516341  0.819643241 16489        1
+## 19 -0.2211706      1  0.145280676 -0.6764351 -0.258362762  6200        0
+## 20 -0.6090245      1 -0.087544363 -0.7757465 -0.257168957  1608        0
+## 21 -0.3763122      1 -0.009936017 -0.7255397  1.375956417 17388        1
+## 22  1.0199617      0  0.300497368 -0.4064424  0.568944171 16528        1
+## 23 -1.3071614      0 -0.087544363 -0.2909281 -0.521298335  3982        0
+## 24 -0.6090245      0  1.154189175 -0.7757465  0.950066448 22821        1
+## 25 -0.6865952      1 -0.009936017 -0.7757465 -0.206730692  1400        0
+## 26 -1.1520198      1 -0.009936017 -0.7125333  1.574724966  4748        0
+## 27  1.5629570      0  0.843755790 -0.7465924  1.629043098 16837        1
+## 28 -1.2295906      1 -0.087544363 -0.5557402 -0.446088614  1492        0
+## 29 -0.0660291      1 -0.087544363 -0.7379949  1.510856393 15145        1
+## 30  0.7096786      0  0.067672329 -0.7249334 -0.525178202  4609        0
+## 31  0.5545370      0  0.610930752 -0.2828267  0.385098186  6741        0
+## 32 -0.9968783      0 -0.087544363 -0.7577801  0.370772524  8974        0
+## 33  1.3302447      0  0.067672329 -0.4139927  1.349991156 15769        1
+## 34 -0.8417368      1  0.222889022 -0.4303058  0.475827373  6427        0
+## 35  0.6321078      1 -0.087544363 -0.7325389 -0.336855448 11302        1
+## 36  1.7180986      1 -0.087544363 -0.6004359 -0.362522257  6205        0
+## 37  0.1666832      1  0.222889022 -0.7381603 -0.024675414  3382        0
+## 38  1.0199617      0  0.067672329 -0.5541420 -0.378041723  9438        0
+## 39 -0.4538829      0  0.378105714 -0.4230862  1.473251532 17441        1
+## 40  1.3302447      0  1.542230905 -0.6488241  0.696382865 17067        1
+## 41  1.6405278      1 -0.087544363 -0.3092803  0.405989775 10481        1
+## 42 -0.7641660      0  0.533322406 -0.2626557  0.198267688 12581        1
+## 43 -0.7641660      1  0.455714060 -0.2739537 -0.281940413  9533        1
+## 44  0.9423909      1  0.222889022 -0.7478599 -0.449670029  4176        0
+## 45  0.5545370      1  0.067672329 -0.7028887 -0.415348133  3371        0
+## 46  1.4853863      1 -0.009936017 -0.4726317  1.445197113 16383        1
+## 47  0.7096786      0  0.222889022 -0.4004903  0.686832424 17930        1
+## 48 -0.6090245      1  0.998972482 -0.3145710  0.712200782 17172        1
+## 49  1.7180986      1 -0.009936017 -0.6035773  1.408487606  8843        0
+## 50  1.0199617      0  0.455714060 -0.3668170  0.475827373 14195        1
+## 51  1.1751032      1  1.542230905 -0.5775645  1.431766805 18005        1
+## 52  1.3302447      0  1.231797521 -0.4916452  1.114811552 17068        1
+## 53 -0.4538829      0  0.455714060 -0.2777013 -0.005276082  8526        0
+## 54  0.4769663      0  0.455714060 -0.5459855  0.343911910  8082        0
+## 55 -0.0660291      1  0.222889022 -0.7757465  1.334770141 27213        1
+## 56  0.3218247      1  1.231797521 -0.4559879  1.533837141 17277        1
+## 57  0.6321078      0  1.775055943 -0.6281020  0.886794778 17312        1
+## 58  0.4769663      1  0.533322406 -0.3068554  1.019008693 15689        1
+## 59  0.6321078      1 -0.087544363 -0.3045958  0.118581197 14202        1
+## 60  0.1666832      0  1.619839251 -0.2831573  1.518019224 18064        1
+## 61 -1.3847322      1 -0.009936017 -0.4920861  1.663066543   673        0</code></pre>
 <pre class="r"><code># make predicitions... 
 predX = predict(salesNet, x)
 # print the results predicted by the neural net
 table(predX[,1]&gt;0.5, x$salesTgt)</code></pre>
 <pre><code>##        
-##         0 1
-##   FALSE 2 0
-##   TRUE  3 9</code></pre>
+##          0  1
+##   FALSE 19  2
+##   TRUE   7 33</code></pre>
 <p>0 and 1 are truth from the train sets,<br />
 TRUE – predicted ‘1’<br />
 FALSE – predicted ‘0’</p>
